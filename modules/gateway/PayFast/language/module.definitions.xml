@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions version="1.0">
+ <group name="payfast">
+  <string name="mode"><![CDATA[Mode]]></string>
+  <string name="mode_live"><![CDATA[Live]]></string>
+  <string name="mode_test"><![CDATA[Test]]></string>
+  <string name="merchant_key"><![CDATA[Merchant Key]]></string>
+  <string name="merchant_id"><![CDATA[Merchant ID]]></string>
+  <string name="debug_log"><![CDATA[Debug Log]]></string>
+  <string name="debug_email"><![CDATA[Debug Email]]></string>
+  <string name="module_description"><![CDATA[This is the standard PayFast payment gateway. You will need to register on <a href="http://www.payfast.co.za">PayFast</a> to use this module.]]></string>
+  <string name="module_title"><![CDATA[PayFast]]></string>
+ </group>
+</definitions>

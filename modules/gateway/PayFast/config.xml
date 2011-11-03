@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<installer version="1.0">
+  <info>
+	<uid>support@payfast.co.za</uid>
+	<type>gateway</type>
+	<name><![CDATA[PayFast]]></name>
+	<description><![CDATA[PayFast Payment Gateway]]></description>
+	<version>1.0.0</version>
+	<minVersion>5.0.0</minVersion>
+	<maxVersion>5.0.*</maxVersion>
+	<creator><![CDATA[PayFast]]></creator>
+	<homepage><![CDATA[http://www.payfast.co.za]]></homepage>
+	<block>false</block>
+  </info>
+</installer>
