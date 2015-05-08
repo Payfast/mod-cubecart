@@ -53,7 +53,7 @@ class Gateway {
 	public function transfer()
 	{
 		$transfer	= array(
-			'action'	=> ($this->_module['testMode']) ? 'https://sandbox.payfast.co.za/eng/process' : 'https://www.payfast.co.za/eng/process',
+			'action'	=> ( $this->_module['testMode'] ) ? 'https://sandbox.payfast.co.za/eng/process' : 'https://www.payfast.co.za/eng/process',
 			'method'	=> 'post',
 			'target'	=> '_self',
 			'submit'	=> 'auto',
@@ -103,10 +103,16 @@ class Gateway {
         $description .= 'Tax = '. $this->_basket['total_tax'] .'; ';
         $description .= 'Total = '. $this->_basket['total'];
 
-		$hidden	= array(
+		$hidden = array(
             //// Merchant details
             'merchant_id' => $merchantId,
             'merchant_key' => $merchantKey,
+
+            ## ITN and Return URLs
+            // Create URLs
+            'return_url' => $GLOBALS['storeURL'].'/index.php?_a=complete',
+            'cancel_url' => $GLOBALS['storeURL'].'/index.php?_a=gateway',
+            'notify_url' => $GLOBALS['storeURL'] .'/index.php?_g=rm&;type=gateway&;cmd=call&;module=PayFast',
 
             //// Customer details
         	'name_first' => substr( trim( $this->_basket['billing_address']['first_name'] ), 0, 100 ),
@@ -114,22 +120,41 @@ class Gateway {
             'email_address' => substr( trim( $this->_basket['billing_address']['email'] ), 0, 255 ),
 
             //// Item details
-    		'item_name' => $GLOBALS['config']->get('config', 'store_name') .' Purchase, Order #'. $this->_basket['cart_order_id'],
-    		'item_description' => substr( trim( $description ), 0, 255 ),
+            'm_payment_id' => $this->_basket['cart_order_id'],
             'amount' => number_format($this->_basket['total'], 2, '.', '' ),
-    		'm_payment_id' => $this->_basket['cart_order_id'],
-    		'currency_code' => $GLOBALS['config']->get('config', 'default_currency'),
+            'item_name' => $GLOBALS['config']->get('config', 'store_name') .' Purchase, Order #'. $this->_basket['cart_order_id'],
+            'item_description' => substr( trim( $description ), 0, 255 ),
+   		
+//    		'currency_code' => $GLOBALS['config']->get('config', 'default_currency'),
             
             // Other details
-            'user_agent' => PF_USER_AGENT,
+//            'user_agent' => PF_USER_AGENT,
+        );
+		
+        $pfOutput = '';
+        foreach ( $hidden as $key => $val )
+            $pfOutput .= $key.'='.urlencode( trim( $val ) ).'&';
 
-			## ITN and Return URLs
-            // Create URLs
-        	'return_url' => $GLOBALS['storeURL'].'/index.php?_a=complete',
-        	'cancel_url' => $GLOBALS['storeURL'].'/index.php?_a=gateway',
-            'notify_url' => $GLOBALS['storeURL'] .'/index.php?_g=rm&amp;type=gateway&amp;cmd=call&amp;module=PayFast',
-		);
-		return $hidden;
+        $passPhrase = $this->_module['passphrase'];
+
+        if ( empty( $passPhrase ) || $this->_module['testMode'] != 0 )
+        {
+            $pfOutput = substr( $pfOutput, 0, -1 );
+        }
+        else
+        {
+            $pfOutput .= 'passphrase='. urlencode( $passPhrase );   
+        }
+
+//        echo $pfOutput; 
+
+        $pfSignature = md5( $pfOutput );         
+        $hidden['signature'] = $pfSignature; 
+
+//        echo $pfSignature;
+//        die();
+
+		return ( $hidden );
 	}
 	// }}}
 	// {{{

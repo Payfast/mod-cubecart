@@ -6,6 +6,7 @@
   <string name="mode_test"><![CDATA[Test]]></string>
   <string name="merchant_key"><![CDATA[Merchant Key]]></string>
   <string name="merchant_id"><![CDATA[Merchant ID]]></string>
+  <string name="passphrase"><![CDATA[Passphrase]]></string>
   <string name="debug_log"><![CDATA[Debug Log]]></string>
   <string name="debug_email"><![CDATA[Debug Email]]></string>
   <string name="module_description"><![CDATA[This is the standard PayFast payment gateway. You will need to register on <a href="http://www.payfast.co.za">PayFast</a> to use this module.]]></string>

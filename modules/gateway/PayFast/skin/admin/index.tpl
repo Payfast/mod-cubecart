@@ -9,6 +9,7 @@
 			<br />
             <div><label for="email">{$LANG.payfast.merchant_id}</label><span><input name="module[merchant_id]" id="email" class="textbox" type="text" value="{$MODULE.merchant_id}" /></span></div>
 			<div><label for="email">{$LANG.payfast.merchant_key}</label><span><input name="module[merchant_key]" id="email" class="textbox" type="text" value="{$MODULE.merchant_key}" /></span></div>
+            <div><label for="email">{$LANG.payfast.passphrase}</label><span><input name="module[passphrase]" id="email" class="textbox" type="text" value="{$MODULE.passphrase}" /></span></div>
 			<br />
             <div>
 				<label for="email">{$LANG.payfast.mode}</label>
