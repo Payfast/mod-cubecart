@@ -149,10 +149,8 @@ class Gateway {
 //        echo $pfOutput; 
 
         $pfSignature = md5( $pfOutput );         
-        $hidden['signature'] = $pfSignature; 
-
-//        echo $pfSignature;
-//        die();
+        $hidden['signature'] = $pfSignature;
+        $hidden['user_agent'] = 'CubeCart 5';
 
 		return ( $hidden );
 	}
