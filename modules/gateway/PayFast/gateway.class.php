@@ -111,7 +111,7 @@ class Gateway {
             ## ITN and Return URLs
             // Create URLs
             'return_url' => $GLOBALS['storeURL'].'/index.php?_a=complete',
-            'cancel_url' => $GLOBALS['storeURL'].'/index.php?_a=gateway',
+            'cancel_url' => $GLOBALS['storeURL'].'/index.php?_a=confirm',
             'notify_url' => $GLOBALS['storeURL'] .'/index.php?_g=rm&;type=gateway&;cmd=call&;module=PayFast',
 
             //// Customer details
