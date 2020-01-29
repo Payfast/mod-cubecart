@@ -35,7 +35,7 @@ Login to the CubeCart admin console
 3. Change values in form:
 4. Set ‘Merchant ID’ to your Merchant ID
 5. Set ‘Merchant Key’ to your Merchant Key
-6. Set ‘Server’ to Live
+6. Check the ‘Go live’ box
 7. Click ‘Edit Config’ button to save configuration
 The module will then be live for transaction processing.
 
@@ -50,7 +50,7 @@ Login to the CubeCart admin console
 3. Change values in form:
 4. Set ‘Merchant ID’ to your Merchant ID
 5. Set ‘Merchant Key’ to your Merchant Key
-6. Set ‘Server’ to Live
+6. Check the ‘Go live’ box
 7. Click ‘Save’ button to save configuration
 The module will then be live for transaction processing.
 

@@ -15,8 +15,8 @@
 global $ini;
 define( 'PF_SOFTWARE_NAME', 'CubeCart' );
 define( 'PF_SOFTWARE_VER', $ini['ver'] );
-define( 'PF_MODULE_NAME', 'PayFast-CubeCart_5' );
-define( 'PF_MODULE_VER', '1.00' );
+define( 'PF_MODULE_NAME', 'PF-CubeCart_6' );
+define( 'PF_MODULE_VER', '1.1' );
 
 // Features
 // - PHP
@@ -65,7 +65,6 @@ define( 'PF_MSG_PENDING',
     ' Transaction Notification when the payment status changes to'.
     ' "Completed", or "Failed"' );
 
-// {{{ pfLog
 /**
  * pflog
  *
@@ -106,8 +105,7 @@ function pflog( $msg = '', $close = false )
         }
     }
 }
-// }}}
-// {{{ pfGetData
+
 /**
  * pfGetData
  *  
@@ -128,8 +126,7 @@ function pfGetData()
     else
         return( $pfData );
 }
-// }}}
-// {{{ pfValidSignature
+
 /**
  * pfValidSignature
  * 
@@ -143,12 +140,11 @@ function pfValidSignature( $pfData = null, &$pfParamString = null, $pfPassphrase
     	if( $key != 'signature' )
     		$pfParamString .= $key .'='. urlencode( $val ) .'&';
     }
-
     // Remove the last '&' from the parameter string
     $pfParamString = substr( $pfParamString, 0, -1 );
 
 
-    if( is_null( $pfPassphrase ) || $this->_module['testMode'] != 0 )
+    if( is_null( $pfPassphrase ) )
     {
         $tempParamString = $pfParamString;
     }
@@ -166,8 +162,7 @@ function pfValidSignature( $pfData = null, &$pfParamString = null, $pfPassphrase
     return( $result );
 }
 
-// }}}
-// {{{ pfValidData
+
 /**
  * pfValidData
  *
@@ -263,46 +258,7 @@ function pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', $pfPro
     else
         return( false );
 }
-// }}}
-// {{{ pfValidIP
-/**
- * pfValidIP
- *
- * @author Jonathan Smit
- * @param $sourceIP String Source IP address 
- */
-function pfValidIP( $sourceIP )
-{
-    // Variable initialization
-    $validHosts = array(
-        'www.payfast.co.za',
-        'sandbox.payfast.co.za',
-        'w1w.payfast.co.za',
-        'w2w.payfast.co.za',
-        );
 
-    $validIps = array();
-
-    foreach( $validHosts as $pfHostname )
-    {
-        $ips = gethostbynamel( $pfHostname );
-
-        if( $ips !== false )
-            $validIps = array_merge( $validIps, $ips );
-    }
-
-    // Remove duplicates
-    $validIps = array_unique( $validIps );
-
-    pflog( "Valid IPs:\n". print_r( $validIps, true ) );
-
-    if( in_array( $sourceIP, $validIps ) )
-        return( true );
-    else
-        return( false );
-}
-// }}}
-// {{{ pfAmountsEqual
 /**
  * pfAmountsEqual
  * 
@@ -323,5 +279,4 @@ function pfAmountsEqual( $amount1, $amount2 )
     else
         return( true );
 }
-// }}}
 ?>

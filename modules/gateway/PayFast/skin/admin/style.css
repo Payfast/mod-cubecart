@@ -1,0 +1,87 @@
+.payfast_plugin{
+    box-shadow: 0px 0px 5px 3px #ccc;
+    max-width: 42rem;
+}
+
+.payfast_form {
+    padding: 20px 20px 30px 20px;
+}
+.payfast__logo {
+    height: 60px;
+}
+
+.payfast_image {
+    height: 75px;
+    background-color: #F3F3F3;
+    flex-direction: column;
+    position: relative;
+    padding: 20px 20px 0 20px;
+    border-bottom: 1px solid #d1d1d1;
+}
+
+.payfast_link:hover {
+    color: red;
+}
+
+.payfast_legend {
+    margin-bottom: 1rem;
+    border-radius: 0.2rem;
+    color: #041B2B;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.payfast_section {
+    background: #FFF!important;
+}
+
+.payfast_description {
+    font-family: 'Open Sans', sans-serif;
+    color: #041B2B;
+}
+.payfast_label {
+    font-size: 14px;
+    width: 23em!important;
+}
+.payfast_input {
+    height: 32px;
+    width: 268px;
+    display: inline-block;
+    font-size: 0.875rem;
+    color: #3d4f5c;
+    background-color: #f5f7fa;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #8897a2;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.payfast_submit {
+    font-size: 0.875rem!important;
+    line-height: 1rem;
+    height: 2.5rem;
+    padding-right: 1.5rem!important;
+    padding-left: 1.5rem!important;
+    border: none!important;
+    box-shadow: 0 4px 8px 0 rgba(50, 50, 93, 0.2)!important;
+    background-color: #e0182d!important;
+    color: #ffffff!important;
+    background-image: unset!important;
+    border-radius: 1.5rem!important;
+    text-shadow: unset!important;
+    width: 15rem;
+    display: block!important;
+    margin-left: 11rem;
+}
+
+@media (max-width: 800px) {
+    .payfast_submit {
+        margin: unset;
+    }
+    .payfast_input {
+        width: 15em!important;
+    }
+
+}

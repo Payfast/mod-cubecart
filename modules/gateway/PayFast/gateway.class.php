@@ -17,7 +17,6 @@ class Gateway {
 	private $_module;
 	private $_basket;
 
-	// {{{
 	/**
 	 * __construct
      */
@@ -29,18 +28,18 @@ class Gateway {
 		$this->_module	= $module;
 		$this->_basket =& $GLOBALS['cart']->basket;
 	}
-	// }}}
-	
-	##################################################
 
-	// {{{
 	/**
 	 * transfer
+     * @usage Will redirect the user to either sandbox or live PayFast
      */
 	public function transfer()
 	{
+        // Include PayFast common file
+        define( 'PF_DEBUG', ( $this->_module['debug_log'] ? true : false ) );
+        include_once( 'payfast_common.inc' );
 		$transfer	= array(
-			'action'	=> ( $this->_module['testMode'] ) ? 'https://sandbox.payfast.co.za/eng/process' : 'https://www.payfast.co.za/eng/process',
+			'action'	=> ( $this->_module['testMode'] != 1) ? 'https://sandbox.payfast.co.za/eng/process' : 'https://www.payfast.co.za/eng/process',
 			'method'	=> 'post',
 			'target'	=> '_self',
 			'submit'	=> 'auto',
@@ -48,16 +47,14 @@ class Gateway {
 		
 		return $transfer;
 	}
-	// }}}
-	// {{{
+
 	/**
 	 * repeatVariables
      */
 	public function repeatVariables() {
 		return false;
 	}
-	// }}}
-	// {{{
+
 	/**
 	 * fixedVariables
      */
@@ -65,19 +62,17 @@ class Gateway {
         // Include PayFast common file
         define( 'PF_DEBUG', ( $this->_module['debug_log'] ? true : false ) );
         include_once( 'payfast_common.inc' );
-    
+
         // Use appropriate merchant identifiers
-        // Live
-        if( $this->_module['testMode'] == 0 )
+        $passPhrase = $this->_module['passphrase'];
+        $merchantId = $this->_module['merchant_id'];
+        $merchantKey = $this->_module['merchant_key'];
+
+        if( empty($merchantId) || empty($merchantKey) )
         {
-            $merchantId = $this->_module['merchant_id']; 
-            $merchantKey = $this->_module['merchant_key'];
-        }
-        // Sandbox
-        else
-        {
-            $merchantId = '10000100'; 
+            $merchantId = '10000100';
             $merchantKey = '46f0cd694581a';
+            $passPhrase = '';
         }
 
         // Create description
@@ -91,60 +86,41 @@ class Gateway {
         $description .= 'Total = '. $this->_basket['total'];
 
 		$hidden = array(
-            //// Merchant details
+            // Merchant details
             'merchant_id' => $merchantId,
             'merchant_key' => $merchantKey,
 
-            ## ITN and Return URLs
             // Create URLs
             'return_url' => $GLOBALS['storeURL'].'/index.php?_a=complete',
             'cancel_url' => $GLOBALS['storeURL'].'/index.php?_a=confirm',
-            'notify_url' => $GLOBALS['storeURL'] .'/index.php?_g=rm&;type=gateway&;cmd=call&;module=PayFast',
+            'notify_url' => $GLOBALS['storeURL'] .'/index.php?_g=rm&type=gateway&cmd=call&module=PayFast',
 
-            //// Customer details
+            // Customer details
         	'name_first' => substr( trim( $this->_basket['billing_address']['first_name'] ), 0, 100 ),
         	'name_last' => substr( trim( $this->_basket['billing_address']['last_name'] ), 0, 100 ),
             'email_address' => substr( trim( $this->_basket['billing_address']['email'] ), 0, 255 ),
 
-            //// Item details
+            // Item details
             'm_payment_id' => $this->_basket['cart_order_id'],
             'amount' => number_format($this->_basket['total'], 2, '.', '' ),
             'item_name' => $GLOBALS['config']->get('config', 'store_name') .' Purchase, Order #'. $this->_basket['cart_order_id'],
             'item_description' => substr( trim( $description ), 0, 255 ),
-   		
-//    		'currency_code' => $GLOBALS['config']->get('config', 'default_currency'),
-            
-            // Other details
-//            'user_agent' => PF_USER_AGENT,
+            'custom_str1' =>  PF_MODULE_NAME . '_' . PF_MODULE_VER
         );
-		
         $pfOutput = '';
         foreach ( $hidden as $key => $val )
-            $pfOutput .= $key.'='.urlencode( trim( $val ) ).'&';
-
-        $passPhrase = $this->_module['passphrase'];
-
-        if ( empty( $passPhrase ) || $this->_module['testMode'] != 0 )
         {
-            $pfOutput = substr( $pfOutput, 0, -1 );
+            $pfOutput .= $key . '=' . urlencode(trim($val)) . '&';
         }
-        else
-        {
-            $pfOutput .= 'passphrase='. urlencode( $passPhrase );   
-        }
-
-//        echo $pfOutput; 
-
+        empty( $passPhrase ) ? $pfOutput = substr( $pfOutput, 0, -1 ) : $pfOutput .= 'passphrase='. urlencode( $passPhrase );
         $pfSignature = md5( $pfOutput );         
         $hidden['signature'] = $pfSignature;
-        $hidden['user_agent'] = 'CubeCart 5';
-
+        $hidden['user_agent'] = PF_USER_AGENT;
 		return ( $hidden );
 	}
-	// }}}
-	// {{{
 	/**
 	 * call
+     * @usage ITN function, will updat ethe order appropriately
      */
 	public function call() {
         // Include PayFast common file
@@ -155,12 +131,10 @@ class Gateway {
         $pfError = false;
         $pfNotes = array();
         $pfData = array();
-        $pfHost = ( ( $this->_module['testMode'] == 1 ) ? 'sandbox' : 'www' ) .'.payfast.co.za';
+        $pfHost = ( ( $this->_module['testMode'] != 1 ) ? 'sandbox' : 'www' ) .'.payfast.co.za';
         $orderId = '';
         $pfParamString = '';
-        
         $pfErrors = array();
-        
         pflog( 'PayFast ITN call received' );
         
         //// Set debug email address
@@ -195,24 +169,11 @@ class Gateway {
         if( !$pfError )
         {
             pflog( 'Verify security signature' );
-        
             // If signature different, log for debugging
-            if( !pfValidSignature( $pfData, $pfParamString ) )
+            if( !pfValidSignature( $pfData, $pfParamString, $this->_module['passphrase']) )
             {
                 $pfError = true;
                 $pfNotes[] = PF_ERR_INVALID_SIGNATURE;
-            }
-        }
-        
-        //// Verify source IP (If not in debug mode)
-        if( !$pfError && !PF_DEBUG )
-        {
-            pflog( 'Verify source IP' );
-            
-            if( !pfValidIP( $_SERVER['REMOTE_ADDR'] ) )
-            {
-                $pfError = true;
-                $pfNotes[] = PF_ERR_BAD_SOURCE_IP;
             }
         }
         
@@ -328,8 +289,7 @@ class Gateway {
         // Close log
         pflog( '', true );
 	}
-	// }}}
-	// {{{
+
 	/**
 	 * process
      */
@@ -341,8 +301,7 @@ class Gateway {
 		## Redirect to _a=complete, and drop out unneeded variables
 		httpredir( currentPage( array( '_g', 'type', 'cmd', 'module' ), array( '_a' => 'complete' ) ) );
 	}
-	// }}}
-	// {{{
+
 	/**
 	 * form
      */
