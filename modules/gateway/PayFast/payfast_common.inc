@@ -30,11 +30,9 @@ if( in_array( 'curl', get_loaded_extensions() ) )
     $pfFeatures .= ' curl '. $pfVersion['version'] .';';
 }
 else
+{
     $pfFeatures .= ' nocurl;';
-
-// Create user agrent
-define( 'PF_USER_AGENT', PF_SOFTWARE_NAME .'/'. PF_SOFTWARE_VER .' ('. trim( $pfFeatures ) .') '. PF_MODULE_NAME .'/'. PF_MODULE_VER );
-
+}
 // General Defines
 define( 'PF_TIMEOUT', 15 );
 define( 'PF_EPSILON', 0.01 );
@@ -187,7 +185,6 @@ function pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', $pfPro
     
         // Set cURL options - Use curl_setopt for freater PHP compatibility
         // Base settings
-        curl_setopt( $ch, CURLOPT_USERAGENT, PF_USER_AGENT );  // Set user agent
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );      // Return output as string rather than outputting it
         curl_setopt( $ch, CURLOPT_HEADER, false );             // Don't include header in output
         curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, true );
@@ -216,7 +213,6 @@ function pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', $pfPro
         // Construct Header
         $header = "POST /eng/query/validate HTTP/1.0\r\n";
        	$header .= "Host: ". $pfHost ."\r\n";
-        $header .= "User-Agent: ". PF_USER_AGENT ."\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $header .= "Content-Length: " . strlen( $pfParamString ) . "\r\n\r\n";
  

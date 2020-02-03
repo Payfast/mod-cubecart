@@ -8,7 +8,7 @@ Except as expressly indicated in this licence, you may not use, copy, modify or 
   <string name="default"><![CDATA[Default Payment Gateway]]></string>
   <string name="desc"><![CDATA[Gateway Description]]></string>
   <string name="module_settings"><![CDATA[PayFast Settings:]]></string>
-  <string name="mode"><![CDATA[Go live]]></string>
+  <string name="mode"><![CDATA[Sandbox testing mode]]></string>
   <string name="merchant_key"><![CDATA[Merchant Key]]></string>
   <string name="merchant_id"><![CDATA[Merchant ID]]></string>
   <string name="passphrase"><![CDATA[Passphrase]]></string>

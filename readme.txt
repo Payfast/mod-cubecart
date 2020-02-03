@@ -1,4 +1,4 @@
-PayFast Cube Cart v5 Module v1.00 for Cube Cart v5.01
+PayFast Cube Cart v5 Module v1.1 for Cube Cart v5.01
 -----------------------------------------------------
 Copyright (c) 2008 PayFast (Pty) Ltd
 You (being anyone who is not PayFast (Pty) Ltd) may download and use this plugin / code in your own website in conjunction with a registered and active PayFast account. If your PayFast account is terminated for any reason, you may not use this plugin / code or part thereof.
@@ -14,13 +14,13 @@ Installation:-
 1. Unzip the module to a temporary location on your computer
 2. Copy and paste the files into your CubeCart installation as they were extracted
 3. Login to the CubeCart admin console
-4. Navigate to Plugins > Manage Plugins
+4. Navigate to Extentions->Manage Extensions
 5. Click on ‘PayFast’ (or on the ‘Edit’ logo next to PayFast)
 6. Change values in form:
-- Check the ‘Status’ checkbox
+- Check the ‘Enable PayFast’ checkbox
 - Click ‘Save’ button to save configuration.
 
-After completing these instructions, the module is installed and ready to be tested in the sandbox environment (The pre-populated Merchant ID and Merchant Key values are the generic sandbox test credentials).
+After completing these instructions, the module is installed and ready to be tested in the sandbox environment (The module has built in default Merchant ID and Merchant Key values that are the generic sandbox test credentials, this will be used when you leave your credentials empty).
 
 I”m ready to go live! What do I do?
 
@@ -30,13 +30,13 @@ In order to make the module ‘LIVE’, follow the instructions below:
 
 Login to the CubeCart admin console
 
-1. Navigate to Modules > Payment Methods
-2. Click on PayFast logo (or on ‘Configure’ next to PayFast logo)
+1. Navigate to Extentions->Manage Extensions
+2. Click on PayFast edit icon next to the red bin icon on the right
 3. Change values in form:
 4. Set ‘Merchant ID’ to your Merchant ID
 5. Set ‘Merchant Key’ to your Merchant Key
-6. Check the ‘Go live’ box
-7. Click ‘Edit Config’ button to save configuration
+6. Uncheck the ‘Sandbox testing mode’ box
+7. Click the ‘Save’ button to save configuration
 The module will then be live for transaction processing.
 
 Cube Cart v6
@@ -50,7 +50,7 @@ Login to the CubeCart admin console
 3. Change values in form:
 4. Set ‘Merchant ID’ to your Merchant ID
 5. Set ‘Merchant Key’ to your Merchant Key
-6. Check the ‘Go live’ box
+6. Uncheck the ‘Sandbox testing mode’ box
 7. Click ‘Save’ button to save configuration
 The module will then be live for transaction processing.
 
