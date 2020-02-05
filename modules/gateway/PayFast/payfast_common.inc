@@ -15,7 +15,7 @@
 global $ini;
 define( 'PF_SOFTWARE_NAME', 'CubeCart' );
 define( 'PF_SOFTWARE_VER', $ini['ver'] );
-define( 'PF_MODULE_NAME', 'PF-CubeCart_6' );
+define( 'PF_MODULE_NAME', 'PF_CubeCart_6' );
 define( 'PF_MODULE_VER', '1.1' );
 
 // Features
