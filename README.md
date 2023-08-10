@@ -1,3 +1,5 @@
+# mod-cubecart
+
 PayFast Cube Cart v5 Module v1.1 for Cube Cart v5.01 up to v6.2.8
 -----------------------------------------------------------------
 Copyright (c) 2008 PayFast (Pty) Ltd
@@ -54,10 +56,4 @@ Login to the CubeCart admin console
 7. Click ‘Save’ button to save configuration
 The module will then be live for transaction processing.
 
-******************************************************************************
-*                                                                            *
-*    Please see the URL below for all information concerning this module:    *
-*                                                                            *
-*                  https://www.payfast.co.za/shopping-carts/cubecart/        *
-*                                                                            *
-******************************************************************************
+Please [click here](https://payfast.io/integration/shopping-carts/cubecart/) for more information concerning this module.
