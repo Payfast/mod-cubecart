@@ -1,4 +1,4 @@
-.payfast_plugin{
+.payfast_plugin {
     box-shadow: 0px 0px 5px 3px #ccc;
     max-width: 42rem;
 }
@@ -6,6 +6,7 @@
 .payfast_form {
     padding: 20px 20px 30px 20px;
 }
+
 .payfast__logo {
     height: 60px;
 }
@@ -32,17 +33,19 @@
 }
 
 .payfast_section {
-    background: #FFF!important;
+    background: #FFF !important;
 }
 
 .payfast_description {
     font-family: 'Open Sans', sans-serif;
     color: #041B2B;
 }
+
 .payfast_label {
     font-size: 14px;
-    width: 23em!important;
+    width: 23em !important;
 }
+
 .payfast_input {
     height: 32px;
     width: 268px;
@@ -59,20 +62,21 @@
 }
 
 .payfast_submit {
-    font-size: 0.875rem!important;
+    font-size: 0.875rem !important;
     line-height: 1rem;
     height: 2.5rem;
-    padding-right: 1.5rem!important;
-    padding-left: 1.5rem!important;
-    border: none!important;
-    box-shadow: 0 4px 8px 0 rgba(50, 50, 93, 0.2)!important;
-    background-color: #e0182d!important;
-    color: #ffffff!important;
-    background-image: unset!important;
-    border-radius: 1.5rem!important;
-    text-shadow: unset!important;
+    padding-right: 1.5rem !important;
+    padding-left: 1.5rem !important;
+    border: none !important;
+    box-shadow: 0 4px 8px 0 rgba(50, 50, 93, 0.2) !important;
+    background-color: rgb(222, 233, 101) !important;
+    color: #000000 !important;
+    background-image: unset !important;
+    border-radius: 1.5rem !important;
+    text-shadow: unset !important;
+    cursor: pointer;
     width: 15rem;
-    display: block!important;
+    display: block !important;
     margin-left: 11rem;
 }
 
@@ -80,8 +84,9 @@
     .payfast_submit {
         margin: unset;
     }
+
     .payfast_input {
-        width: 15em!important;
+        width: 15em !important;
     }
 
 }

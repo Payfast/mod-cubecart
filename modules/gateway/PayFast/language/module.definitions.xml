@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Copyright (c) 2008 PayFast (Pty) Ltd
-You (being anyone who is not PayFast (Pty) Ltd) may download and use this plugin / code in your own website in conjunction with a registered and active PayFast account. If your PayFast account is terminated for any reason, you may not use this plugin / code or part thereof.
-Except as expressly indicated in this licence, you may not use, copy, modify or distribute this plugin / code or part thereof in any way.-->
+<!--Copyright (c) 2024 Payfast (Pty) Ltd-->
 <definitions version="1.1">
- <group name="payfast">
-  <string name="status"><![CDATA[Enable PayFast]]></string>
-  <string name="default"><![CDATA[Default Payment Gateway]]></string>
-  <string name="desc"><![CDATA[Gateway Description]]></string>
-  <string name="module_settings"><![CDATA[PayFast Settings:]]></string>
-  <string name="mode"><![CDATA[Sandbox testing mode]]></string>
-  <string name="merchant_key"><![CDATA[Merchant Key]]></string>
-  <string name="merchant_id"><![CDATA[Merchant ID]]></string>
-  <string name="passphrase"><![CDATA[Passphrase]]></string>
-  <string name="debug_log"><![CDATA[Debug Log]]></string>
-  <string name="debug_email"><![CDATA[Debug Email]]></string>
-  <string name="module_description"><![CDATA[Register on <a target="_blank" class="payfast_link" href="https://www.payfast.co.za/registration">PayFast</a> to use this module.]]></string>
-  <string name="module_title"><![CDATA[PayFast]]></string>
- </group>
+    <group name="payfast">
+        <string name="status"><![CDATA[Enable Payfast]]></string>
+        <string name="default"><![CDATA[Default Payment Gateway]]></string>
+        <string name="desc"><![CDATA[Gateway Description]]></string>
+        <string name="module_settings"><![CDATA[Payfast Settings:]]></string>
+        <string name="mode"><![CDATA[Test Mode]]></string>
+        <string name="merchant_key"><![CDATA[Merchant Key]]></string>
+        <string name="merchant_id"><![CDATA[Merchant ID]]></string>
+        <string name="passphrase"><![CDATA[Passphrase]]></string>
+        <string name="debug_log"><![CDATA[Debug Log]]></string>
+        <string name="debug_email"><![CDATA[Debug Email]]></string>
+        <string name="module_description">
+            <![CDATA[Register on <a target="_blank" class="payfast_link" href="https://www.payfast.co.za/registration">Payfast</a> to use this module.]]></string>
+        <string name="module_title"><![CDATA[Payfast]]></string>
+    </group>
 </definitions>
