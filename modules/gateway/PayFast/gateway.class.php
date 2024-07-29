@@ -2,51 +2,48 @@
 /**
  * gateway.class.php
  *
- * Gateway Class for PayFast
+ * Gateway Class for Payfast
  *
- * Copyright (c) 2008 PayFast (Pty) Ltd
- * You (being anyone who is not PayFast (Pty) Ltd) may download and use this plugin / code in your own website in conjunction with a registered and active PayFast account. If your PayFast account is terminated for any reason, you may not use this plugin / code or part thereof.
- * Except as expressly indicated in this licence, you may not use, copy, modify or distribute this plugin / code or part thereof in any way.
- *
- * @author     Jonathan Smit
- * @link       http://www.payfast.co.za/help/cube_cart
+ * Copyright (c) 2024 Payfast (Pty) Ltd
+ * @author App Inlet (Pty) Ltd
+ * @link http://www.payfast.co.za/help/cube_cart
  */
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Payfast\PayfastCommon\PayfastCommon;
 
 class Gateway
 {
-    private $_config;
-    private $_module;
-    private $_basket;
+    private $config;
+    private $module;
+    private $basket;
 
     /**
      * __construct
      */
-    public function __construct($module = false, $basket = false)
+    public function __construct($module = false)
     {
-        $this->_config = &$GLOBALS['config'];
+        $this->config   = &$GLOBALS['config'];
         $this->_session = &$GLOBALS['user'];
 
-        $this->_module = $module;
-        $this->_basket = &$GLOBALS['cart']->basket;
+        $this->module = $module;
+        $this->basket = &$GLOBALS['cart']->basket;
     }
 
     /**
      * transfer
-     * @usage Will redirect the user to either sandbox or live PayFast
+     * @usage Will redirect the user to either sandbox or live Payfast
      */
     public function transfer()
     {
-        // Include PayFast common file
-        define('PF_DEBUG', ($this->_module['debug_log'] ? true : false));
-        include_once 'payfast_common.inc';
-        $transfer = array(
-            'action' => ($this->_module['testMode'] != 0) ? 'https://sandbox.payfast.co.za/eng/process' : 'https://www.payfast.co.za/eng/process',
+        return array(
+            'action' => ($this->module['testMode'] != 0) ?
+                'https://sandbox.payfast.co.za/eng/process' : 'https://www.payfast.co.za/eng/process',
             'method' => 'post',
             'target' => '_self',
             'submit' => 'auto',
         );
-
-        return $transfer;
     }
 
     /**
@@ -62,149 +59,145 @@ class Gateway
      */
     public function fixedVariables()
     {
-        // Include PayFast common file
-        define('PF_DEBUG', ($this->_module['debug_log'] ? true : false));
-        include_once 'payfast_common.inc';
-
         // Use appropriate merchant identifiers
-        $passPhrase = $this->_module['passphrase'];
-        $merchantId = $this->_module['merchant_id'];
-        $merchantKey = $this->_module['merchant_key'];
-
-        if (empty($merchantId) || empty($merchantKey)) {
-            $merchantId = '10000100';
-            $merchantKey = '46f0cd694581a';
-            $passPhrase = '';
-        }
+        $passPhrase  = $this->module['passphrase'];
+        $merchantId  = $this->module['merchant_id'];
+        $merchantKey = $this->module['merchant_key'];
 
         // Create description
         $description = '';
-        foreach ($this->_basket['contents'] as $item) {
+        foreach ($this->basket['contents'] as $item) {
             $description .= $item['quantity'] . ' x ' . $item['name'] . ' @ ' .
-            number_format($item['price'] / $item['quantity'], 2, '.', ',') . 'ea = ' .
-            number_format($item['price'], 2, '.', ',') . '; ';
+                            number_format($item['price'] / $item['quantity'], 2, '.', ',') . 'ea = ' .
+                            number_format($item['price'], 2, '.', ',') . '; ';
         }
 
-        $description .= 'Shipping = ' . $this->_basket['shipping']['value'] . '; ';
-        $description .= 'Tax = ' . $this->_basket['total_tax'] . '; ';
-        $description .= 'Total = ' . $this->_basket['total'];
+        $description .= 'Shipping = ' . $this->basket['shipping']['value'] . '; ';
+        $description .= 'Tax = ' . $this->basket['total_tax'] . '; ';
+        $description .= 'Total = ' . $this->basket['total'];
 
-        $hidden = array(
+        $hidden   = array(
             // Merchant details
-            'merchant_id' => $merchantId,
-            'merchant_key' => $merchantKey,
+            'merchant_id'      => $merchantId,
+            'merchant_key'     => $merchantKey,
 
             // Create URLs
-            'return_url' => $GLOBALS['storeURL'] . '/index.php?_a=complete',
-            'cancel_url' => $GLOBALS['storeURL'] . '/index.php?_a=confirm',
-            'notify_url' => $GLOBALS['storeURL'] . '/index.php?_g=rm&type=gateway&cmd=call&module=PayFast',
+            'return_url'       => $GLOBALS['storeURL'] . '/index.php?_a=complete',
+            'cancel_url'       => $GLOBALS['storeURL'] . '/index.php?_a=confirm',
+            'notify_url'       => $GLOBALS['storeURL'] . '/index.php?_g=rm&type=gateway&cmd=call&module=Payfast',
 
             // Customer details
-            'name_first' => substr(trim($this->_basket['billing_address']['first_name']), 0, 100),
-            'name_last' => substr(trim($this->_basket['billing_address']['last_name']), 0, 100),
-            'email_address' => substr(trim($this->_basket['billing_address']['email']), 0, 255),
+            'name_first'       => substr(trim($this->basket['billing_address']['first_name']), 0, 100),
+            'name_last'        => substr(trim($this->basket['billing_address']['last_name']), 0, 100),
+            'email_address'    => substr(trim($this->basket['billing_address']['email']), 0, 255),
 
             // Item details
-            'm_payment_id' => $this->_basket['cart_order_id'],
-            'amount' => number_format($this->_basket['total'], 2, '.', ''),
-            'item_name' => $GLOBALS['config']->get('config', 'store_name') . ' Purchase, Order #' . $this->_basket['cart_order_id'],
+            'm_payment_id'     => $this->basket['cart_order_id'],
+            'amount'           => number_format($this->basket['total'], 2, '.', ''),
+            'item_name'        => $GLOBALS['config']->get(
+                    'config',
+                    'store_name'
+                ) . ' Purchase, Order #' . $this->basket['cart_order_id'],
             'item_description' => substr(trim($description), 0, 255),
-            'custom_str1' => PF_MODULE_NAME . '_' . PF_MODULE_VER,
+            'custom_str1'      => 'PF_CubeCart_6' . '_' . '1.1',
         );
         $pfOutput = '';
         foreach ($hidden as $key => $val) {
             $pfOutput .= $key . '=' . urlencode(trim($val)) . '&';
         }
         empty($passPhrase) ? $pfOutput = substr($pfOutput, 0, -1) : $pfOutput .= 'passphrase=' . urlencode($passPhrase);
-        $pfSignature = md5($pfOutput);
+        $pfSignature         = md5($pfOutput);
         $hidden['signature'] = $pfSignature;
-        return ($hidden);
+
+        return $hidden;
     }
+
     /**
      * call
      * @usage ITN function, will updat ethe order appropriately
      */
     public function call()
     {
-        // Include PayFast common file
-        define('PF_DEBUG', ($this->_module['debug_log'] ? true : false));
-        include_once 'payfast_common.inc';
+        // Include Payfast common file
+        $debugMode     = $this->isDebugMode();
+        $payfastCommon = new PayfastCommon($debugMode);
 
         // Variable Initialization
-        $pfError = false;
-        $pfNotes = array();
-        $pfData = array();
-        $pfHost = (($this->_module['testMode'] != 0) ? 'sandbox' : 'www') . '.payfast.co.za';
-        $orderId = '';
+        $pfError       = false;
+        $pfNotes       = array();
+        $pfData        = array();
+        $pfHost        = $this->getHost();
+        $orderId       = '';
         $pfParamString = '';
-        $pfErrors = array();
-        pflog('PayFast ITN call received');
+        $payfastCommon->pflog('Payfast ITN call received');
 
-        //// Set debug email address
-        $pfDebugEmail = (strlen($this->_module['debug_email']) > 0) ?
-        $this->_module['debug_email'] : $this->_config->get('config', 'masterEmail');
+        //// Notify Payfast that information has been received
+        $this->notifyPayfast($pfError);
 
-        //// Notify PayFast that information has been received
+        //// Get data sent by Payfast
         if (!$pfError) {
-            header('HTTP/1.0 200 OK');
-            flush();
-        }
-
-        //// Get data sent by PayFast
-        if (!$pfError) {
-            pflog('Get posted data');
+            $payfastCommon->pflog('Get posted data');
 
             // Posted variables from ITN
-            $pfData = pfGetData();
+            $pfData = $payfastCommon->pfGetData();
 
-            pflog('PayFast Data: ' . print_r($pfData, true));
+            $payfastCommon->pflog('Payfast Data: ' . print_r($pfData, true));
 
             if ($pfData === false) {
-                $pfError = true;
-                $pfNotes[] = PF_ERR_BAD_ACCESS;
+                $pfError   = true;
+                $pfNotes[] = $payfastCommon::PF_ERR_BAD_ACCESS;
             }
         }
 
         //// Verify security signature
         if (!$pfError) {
-            pflog('Verify security signature');
+            $payfastCommon->pflog('Verify security signature');
             // If signature different, log for debugging
-            if (!pfValidSignature($pfData, $pfParamString, $this->_module['passphrase'])) {
-                $pfError = true;
-                $pfNotes[] = PF_ERR_INVALID_SIGNATURE;
+            if (!$payfastCommon->pfValidSignature($pfData, $pfParamString, $this->module['passphrase'])) {
+                $pfError   = true;
+                $pfNotes[] = $payfastCommon::PF_ERR_INVALID_SIGNATURE;
             }
         }
 
         //// Retrieve order from CubeCart
         if (!$pfError) {
-            pflog('Get order');
+            $payfastCommon->pflog('Get order');
 
-            $orderId = $pfData['m_payment_id'];
-            $order = Order::getInstance();
+            $orderId       = $pfData['m_payment_id'];
+            $order         = Order::getInstance();
             $order_summary = $order->getSummary($orderId);
 
-            pflog('Order ID = ' . $orderId);
+            $payfastCommon->pflog('Order ID = ' . $orderId);
         }
 
         //// Verify data
-        if (!$pfError) {
-            pflog('Verify data received');
+        global $ini;
+        $moduleInfo = [
+            "pfSoftwareName"       => 'CubeCart',
+            "pfSoftwareVer"        => $ini['ver'],
+            "pfSoftwareModuleName" => 'PF_CubeCart_6',
+            "pfModuleVer"          => '1.2',
+        ];
 
-            if ($config['proxy'] == 1) {
-                $pfValid = pfValidData($pfHost, $pfParamString, $config['proxyHost'] . ":" . $config['proxyPort']);
-            } else {
-                $pfValid = pfValidData($pfHost, $pfParamString);
-            }
+        if (!$pfError) {
+            $payfastCommon->pflog('Verify data received');
+
+            $pfValid = $this->verifyDataReceived(
+                $payfastCommon,
+                $moduleInfo,
+                $pfHost,
+                $pfParamString
+            );
 
             if (!$pfValid) {
-                $pfError = true;
-                $pfNotes[] = PF_ERR_BAD_ACCESS;
+                $pfError   = true;
+                $pfNotes[] = $payfastCommon::PF_ERR_BAD_ACCESS;
             }
         }
 
         //// Check status and update order & transaction table
         if (!$pfError) {
-            pflog('Check status and update order');
+            $payfastCommon->pflog('Check status and update order');
 
             $success = true;
 
@@ -212,74 +205,57 @@ class Gateway
             if ($pfData['payment_status'] !== 'COMPLETE') {
                 $success = false;
 
-                switch ($pfData['payment_status']) {
-                    case 'FAILED':
-                        $pfNotes = PF_MSG_FAILED;
-                        break;
-
-                    case 'PENDING':
-                        $pfNotes = PF_MSG_PENDING;
-                        break;
-
-                    default:
-                        $pfNotes = PF_ERR_UNKNOWN;
-                        break;
-                }
+                $pfNotes = match ($pfData['payment_status']) {
+                    'FAILED' => $payfastCommon::PF_MSG_FAILED,
+                    'PENDING' => $payfastCommon::PF_MSG_PENDING,
+                    default => $payfastCommon::PF_ERR_UNKNOWN,
+                };
             }
 
             // Check if the transaction has already been processed
             // This checks for a "transaction" in CubeCart of the same status (status)
             // for the same order (order_id) and same payfast payment id (trans_id)
-            $trnId = $GLOBALS['db']->select('CubeCart_transactions', array('id'), array('trans_id' => $pfData['pf_payment_id']));
+            $trnId = $GLOBALS['db']->select(
+                'CubeCart_transactions',
+                array('id'),
+                array('trans_id' => $pfData['pf_payment_id'])
+            );
 
-            if ($trnId == true) {
-                $success = false;
-                $pfNotes[] = PF_ERR_ORDER_PROCESSED;
-            }
+            list($success, $pfNotes) = $this->checkTransactionState($trnId, $success, $payfastCommon, $pfNotes);
 
-            // Check PayFast amount matches order amount
-            if (!pfAmountsEqual($pfData['amount_gross'], $order_summary['total'])) {
-                $success = false;
-                $pfNotes[] = PF_ERR_AMOUNT_MISMATCH;
+            // Check Payfast amount matches order amount
+            if (!$payfastCommon->pfAmountsEqual($pfData['amount_gross'], $order_summary['total'])) {
+                $success   = false;
+                $pfNotes[] = $payfastCommon::PF_ERR_AMOUNT_MISMATCH;
             }
 
             // If transaction is successful and correct, update order status
-            if ($success == true) {
-                $pfNotes[] = PF_MSG_OK;
-                $order->paymentStatus(Order::PAYMENT_SUCCESS, $orderId);
-                $order->orderStatus(Order::ORDER_PROCESS, $orderId);
-            }
+            $pfNotes = $this->upDateOrderStatus($success, $payfastCommon, $pfNotes, $order, $orderId);
         }
 
         //// Insert transaction entry
         // This gets done for every ITN call no matter whether successful or not.
         // The notes field is used to provide feedback to the user.
-        pflog('Create transaction data and save');
+        $payfastCommon->pflog('Create transaction data and save');
 
         $pfNoteMsg = '';
-        if (sizeof($pfNotes) > 1) {
-            foreach ($pfNotes as $note) {
-                $pfNoteMsg .= $note . "; ";
-            }
-        } else {
-            $pfNoteMsg .= $pfNotes[0];
-        }
+        $pfNoteMsg = $this->getNotesMsg($pfNotes, $pfNoteMsg);
 
-        $transData = array();
+        $transData                = array();
         $transData['customer_id'] = $order_summary['customer_id'];
-        $transData['gateway'] = "PayFast ITN";
-        $transData['trans_id'] = $pfData['pf_payment_id'];
-        $transData['order_id'] = $orderId;
-        $transData['status'] = $pfData['payment_status'];
-        $transData['amount'] = $pfData['amount_gross'];
-        $transData['notes'] = $pfNoteMsg;
+        $transData['gateway']     = "Payfast ITN";
+        $transData['trans_id']    = $pfData['pf_payment_id'];
+        $transData['order_id']    = $orderId;
+        $transData['status']      = $pfData['payment_status'];
+        $transData['amount']      = $pfData['amount_gross'];
+        $transData['notes']       = $pfNoteMsg;
 
-        pflog("Transaction log data: \n" . print_r($transData, true));
+        $payfastCommon->pflog("Transaction log data: \n" . print_r($transData, true));
 
         $order->logTransaction($transData);
 
         // Close log
-        pflog('', true);
+        $payfastCommon->pflog('', true);
     }
 
     /**
@@ -287,7 +263,8 @@ class Gateway
      */
     public function process()
     {
-        ## We're being returned from PayFast - This function can do some pre-processing, but must assume NO variables are being passed around
+        ## We're being returned from Payfast - This function can do some pre-processing,
+        #but must assume NO variables are being passed around
         ## The basket will be emptied when we get to _a=complete, and the status isn't Failed/Declined
 
         ## Redirect to _a=complete, and drop out unneeded variables
@@ -301,5 +278,125 @@ class Gateway
     {
         return false;
     }
-    // }}}
+
+    /**
+     * @param PayfastCommon $payfastCommon
+     * @param array $moduleInfo
+     * @param string $pfHost
+     * @param string $pfParamString
+     *
+     * @return bool
+     */
+    public function verifyDataReceived(
+        PayfastCommon $payfastCommon,
+        array $moduleInfo,
+        string $pfHost,
+        string $pfParamString
+    ): bool {
+        return $payfastCommon->pfValidData($moduleInfo, $pfHost, $pfParamString);
+    }
+
+    /**
+     * @param bool $pfError
+     *
+     * @return void
+     */
+    public function notifyPayfast(bool $pfError): void
+    {
+        if (!$pfError) {
+            header('HTTP/1.0 200 OK');
+            flush();
+        }
+    }
+
+    /**
+     * @param bool $success
+     * @param PayfastCommon $payfastCommon
+     * @param array $pfNotes
+     * @param $order
+     * @param mixed $orderId
+     *
+     * @return array
+     */
+    public function upDateOrderStatus(
+        bool $success,
+        PayfastCommon $payfastCommon,
+        array $pfNotes,
+        $order,
+        mixed $orderId
+    ): array {
+        if ($success) {
+            $pfNotes[] = $payfastCommon::PF_MSG_OK;
+            try {
+                $order->paymentStatus(Order::PAYMENT_SUCCESS, $orderId);
+                $order->orderStatus(Order::ORDER_COMPLETE, $orderId);
+            } catch (Exception $e) {
+                $payfastCommon->pflog('Error Exception message: ' . $e);
+            }
+        }
+
+        return $pfNotes;
+    }
+
+    /**
+     * @param array $pfNotes
+     * @param string $pfNoteMsg
+     *
+     * @return string
+     */
+    public function getNotesMsg(array $pfNotes, string $pfNoteMsg): string
+    {
+        if (sizeof($pfNotes) > 1) {
+            foreach ($pfNotes as $note) {
+                $pfNoteMsg .= $note . "; ";
+            }
+        } else {
+            $pfNoteMsg .= $pfNotes[0];
+        }
+
+        return $pfNoteMsg;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebugMode(): bool
+    {
+        return $this->module['debug_log'] ? true : false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHost(): string
+    {
+        return (($this->module['testMode'] != 0) ? 'sandbox' : 'www') . '.payfast.co.za';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDebugEmail(): mixed
+    {
+        return (strlen($this->module['debug_email']) > 0) ?
+            $this->module['debug_email'] : $this->config->get('config', 'masterEmail');
+    }
+
+    /**
+     * @param $trnId
+     * @param bool $success
+     * @param PayfastCommon $payfastCommon
+     * @param array $pfNotes
+     *
+     * @return array
+     */
+    public function checkTransactionState($trnId, bool $success, PayfastCommon $payfastCommon, array $pfNotes): array
+    {
+        if ($trnId) {
+            $success   = false;
+            $pfNotes[] = $payfastCommon::PF_ERR_ORDER_PROCESSED;
+        }
+
+        return array($success, $pfNotes);
+    }
 }

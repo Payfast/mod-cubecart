@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Copyright (c) 2008 PayFast (Pty) Ltd
-You (being anyone who is not PayFast (Pty) Ltd) may download and use this plugin / code in your own website in conjunction with a registered and active PayFast account. If your PayFast account is terminated for any reason, you may not use this plugin / code or part thereof.
-Except as expressly indicated in this licence, you may not use, copy, modify or distribute this plugin / code or part thereof in any way.-->
+<!--Copyright (c) 2024 Payfast (Pty) Ltd-->
 <installer version="1.0">
-  <info>
-	<uid>support@payfast.co.za</uid>
-	<type>gateway</type>
-	<name><![CDATA[PayFast]]></name>
-	<description><![CDATA[PayFast Payment Gateway]]></description>
-	<version>1.0.0</version>
-	<minVersion>5.0.0</minVersion>
-	<maxVersion>5.0.*</maxVersion>
-	<creator><![CDATA[PayFast]]></creator>
-	<homepage><![CDATA[http://www.payfast.co.za]]></homepage>
-	<block>false</block>
-  </info>
+    <info>
+        <uid>support@payfast.help</uid>
+        <type>gateway</type>
+        <name><![CDATA[Payfast]]></name>
+        <description><![CDATA[Payfast Payment Gateway]]></description>
+        <version>1.2.0</version>
+        <minVersion>5.0.0</minVersion>
+        <maxVersion>6.5.*</maxVersion>
+        <creator><![CDATA[Payfast]]></creator>
+        <homepage><![CDATA[http://www.payfast.co.za]]></homepage>
+        <block>false</block>
+    </info>
 </installer>

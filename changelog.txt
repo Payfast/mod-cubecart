@@ -1,0 +1,8 @@
+=====================================
+Date	  : Version: Description
+=====================================
+
+2024-07-29: 1.2.0 : Payfast Common library integration.
+                    New branding changes.
+                    Tested with Cube Cart 6.5.5.
+                    PHP 8.1 upgrade.
