@@ -12,7 +12,7 @@ to [contact the Payfast support team](https://payfast.io/contact/) should you re
     - This should NOT overwrite any existing files or folders and merely supplement them with the Payfast files.
     - This is, however, dependent on the FTP program you use.
 3. Login to the CubeCart admin console and Navigate to **Extensions** -> **Manage Extensions**.
-4. Click on **Payfast** (or on the **Edit** logo next to Payfast).
+4. Click the **Setup** button for **Payfast** (or on the **Edit** icon if you have already activated the module).
 5. Set **Merchant ID** to your Merchant ID.
 6. Set **Merchant Key** to your Merchant Key
 7. Uncheck the **Sandbox testing mode** box
