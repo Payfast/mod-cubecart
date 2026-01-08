@@ -7,7 +7,7 @@ to [contact the Payfast support team](https://payfast.io/contact/) should you re
 
 ## Installation
 
-1. Login to the CubeCart admin console and Navigate to **Plugins** -> **Manage Plugins**.
+1. Login to the CubeCart admin console and Navigate to **Extensions** -> **Manage Extensions**.
 2. Click on **Payfast** (or on the **Edit** logo next to Payfast).
 3. Set **Merchant ID** to your Merchant ID.
 4. Set **Merchant Key** to your Merchant Key
