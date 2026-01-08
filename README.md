@@ -17,6 +17,7 @@ to [contact the Payfast support team](https://payfast.io/contact/) should you re
 6. Set **Merchant Key** to your Merchant Key
 7. Uncheck the **Sandbox testing mode** box
 8. Click **Save** button to save configuration.
+9. Click the **CLEAR CACHE** button.
 
 Please [click here](https://payfast.io/integration/plugins/cubecart/) for more information concerning this module.
 
