@@ -7,12 +7,16 @@ to [contact the Payfast support team](https://payfast.io/contact/) should you re
 
 ## Installation
 
-1. Login to the CubeCart admin console and Navigate to **Extensions** -> **Manage Extensions**.
-2. Click on **Payfast** (or on the **Edit** logo next to Payfast).
-3. Set **Merchant ID** to your Merchant ID.
-4. Set **Merchant Key** to your Merchant Key
-5. Uncheck the **Sandbox testing mode** box
-6. Click **Save** button to save configuration.
+1. Unzip the module to a temporary location on your computer.
+2. Copy the **modules** folder in the archive to your base **CubeCart** installation.
+    - This should NOT overwrite any existing files or folders and merely supplement them with the Payfast files.
+    - This is, however, dependent on the FTP program you use.
+3. Login to the CubeCart admin console and Navigate to **Extensions** -> **Manage Extensions**.
+4. Click on **Payfast** (or on the **Edit** logo next to Payfast).
+5. Set **Merchant ID** to your Merchant ID.
+6. Set **Merchant Key** to your Merchant Key
+7. Uncheck the **Sandbox testing mode** box
+8. Click **Save** button to save configuration.
 
 Please [click here](https://payfast.io/integration/plugins/cubecart/) for more information concerning this module.
 
