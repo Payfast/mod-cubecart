@@ -21,12 +21,12 @@ to [contact the Payfast support team](https://payfast.io/contact/) should you re
 
 3. **Configure the Plugin**
 
-    - Login to the CubeCart admin console and Navigate to **Extensions** -> **Manage Extensions**.
+    - Login to the CubeCart admin console and navigate to **Extensions** -> **Manage Extensions**.
     - Click the **Setup** button for **Payfast** (or on the **Edit** icon if you have already activated the module).
     - Set **Merchant ID** to your Merchant ID.
-    - Set **Merchant Key** to your Merchant Key
-    - Uncheck the **Sandbox testing mode** box
-    - Click **Save** button to save configuration.
+    - Set **Merchant Key** to your Merchant Key.
+    - Uncheck the **Sandbox testing mode** box.
+    - Click the **Save** button to save the configuration.
     - Click the **CLEAR CACHE** button.
 
 Please [click here](https://payfast.io/integration/plugins/cubecart/) for more information concerning this module.
