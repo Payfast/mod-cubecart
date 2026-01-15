@@ -4,14 +4,14 @@
  *
  * Gateway Class for Payfast
  *
- * Copyright (c) 2024 Payfast (Pty) Ltd
+ * Copyright (c) 2026 Payfast (Pty) Ltd
  * @author App Inlet (Pty) Ltd
  * @link http://www.payfast.co.za/help/cube_cart
  */
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Payfast\PayfastCommon\PayfastCommon;
+use Payfast\PayfastCommon\Aggregator\Request\PaymentRequest;
 
 class Gateway
 {
@@ -120,7 +120,7 @@ class Gateway
     {
         // Include Payfast common file
         $debugMode     = $this->isDebugMode();
-        $payfastCommon = new PayfastCommon($debugMode);
+        $paymentRequest = new PaymentRequest($debugMode);
 
         // Variable Initialization
         $pfError       = false;
@@ -129,45 +129,45 @@ class Gateway
         $pfHost        = $this->getHost();
         $orderId       = '';
         $pfParamString = '';
-        $payfastCommon->pflog('Payfast ITN call received');
+        $paymentRequest->pflog('Payfast ITN call received');
 
         //// Notify Payfast that information has been received
         $this->notifyPayfast($pfError);
 
         //// Get data sent by Payfast
         if (!$pfError) {
-            $payfastCommon->pflog('Get posted data');
+            $paymentRequest->pflog('Get posted data');
 
             // Posted variables from ITN
-            $pfData = $payfastCommon->pfGetData();
+            $pfData = $paymentRequest->pfGetData();
 
-            $payfastCommon->pflog('Payfast Data: ' . print_r($pfData, true));
+            $paymentRequest->pflog('Payfast Data: ' . print_r($pfData, true));
 
             if ($pfData === false) {
                 $pfError   = true;
-                $pfNotes[] = $payfastCommon::PF_ERR_BAD_ACCESS;
+                $pfNotes[] = $paymentRequest::PF_ERR_BAD_ACCESS;
             }
         }
 
         //// Verify security signature
         if (!$pfError) {
-            $payfastCommon->pflog('Verify security signature');
+            $paymentRequest->pflog('Verify security signature');
             // If signature different, log for debugging
-            if (!$payfastCommon->pfValidSignature($pfData, $pfParamString, $this->module['passphrase'])) {
+            if (!$paymentRequest->pfValidSignature($pfData, $pfParamString, $this->module['passphrase'])) {
                 $pfError   = true;
-                $pfNotes[] = $payfastCommon::PF_ERR_INVALID_SIGNATURE;
+                $pfNotes[] = $paymentRequest::PF_ERR_INVALID_SIGNATURE;
             }
         }
 
         //// Retrieve order from CubeCart
         if (!$pfError) {
-            $payfastCommon->pflog('Get order');
+            $paymentRequest->pflog('Get order');
 
             $orderId       = $pfData['m_payment_id'];
             $order         = Order::getInstance();
             $order_summary = $order->getSummary($orderId);
 
-            $payfastCommon->pflog('Order ID = ' . $orderId);
+            $paymentRequest->pflog('Order ID = ' . $orderId);
         }
 
         //// Verify data
@@ -176,14 +176,14 @@ class Gateway
             "pfSoftwareName"       => 'CubeCart',
             "pfSoftwareVer"        => $ini['ver'],
             "pfSoftwareModuleName" => 'PF_CubeCart_6',
-            "pfModuleVer"          => '1.2',
+            "pfModuleVer"          => '1.3',
         ];
 
         if (!$pfError) {
-            $payfastCommon->pflog('Verify data received');
+            $paymentRequest->pflog('Verify data received');
 
             $pfValid = $this->verifyDataReceived(
-                $payfastCommon,
+                $paymentRequest,
                 $moduleInfo,
                 $pfHost,
                 $pfParamString
@@ -191,13 +191,13 @@ class Gateway
 
             if (!$pfValid) {
                 $pfError   = true;
-                $pfNotes[] = $payfastCommon::PF_ERR_BAD_ACCESS;
+                $pfNotes[] = $paymentRequest::PF_ERR_BAD_ACCESS;
             }
         }
 
         //// Check status and update order & transaction table
         if (!$pfError) {
-            $payfastCommon->pflog('Check status and update order');
+            $paymentRequest->pflog('Check status and update order');
 
             $success = true;
 
@@ -206,9 +206,9 @@ class Gateway
                 $success = false;
 
                 $pfNotes = match ($pfData['payment_status']) {
-                    'FAILED' => $payfastCommon::PF_MSG_FAILED,
-                    'PENDING' => $payfastCommon::PF_MSG_PENDING,
-                    default => $payfastCommon::PF_ERR_UNKNOWN,
+                    'FAILED' => $paymentRequest::PF_MSG_FAILED,
+                    'PENDING' => $paymentRequest::PF_MSG_PENDING,
+                    default => $paymentRequest::PF_ERR_UNKNOWN,
                 };
             }
 
@@ -221,22 +221,22 @@ class Gateway
                 array('trans_id' => $pfData['pf_payment_id'])
             );
 
-            list($success, $pfNotes) = $this->checkTransactionState($trnId, $success, $payfastCommon, $pfNotes);
+            list($success, $pfNotes) = $this->checkTransactionState($trnId, $success, $paymentRequest, $pfNotes);
 
             // Check Payfast amount matches order amount
-            if (!$payfastCommon->pfAmountsEqual($pfData['amount_gross'], $order_summary['total'])) {
+            if (!$paymentRequest->pfAmountsEqual($pfData['amount_gross'], $order_summary['total'])) {
                 $success   = false;
-                $pfNotes[] = $payfastCommon::PF_ERR_AMOUNT_MISMATCH;
+                $pfNotes[] = $paymentRequest::PF_ERR_AMOUNT_MISMATCH;
             }
 
             // If transaction is successful and correct, update order status
-            $pfNotes = $this->upDateOrderStatus($success, $payfastCommon, $pfNotes, $order, $orderId);
+            $pfNotes = $this->upDateOrderStatus($success, $paymentRequest, $pfNotes, $order, $orderId);
         }
 
         //// Insert transaction entry
         // This gets done for every ITN call no matter whether successful or not.
         // The notes field is used to provide feedback to the user.
-        $payfastCommon->pflog('Create transaction data and save');
+        $paymentRequest->pflog('Create transaction data and save');
 
         $pfNoteMsg = '';
         $pfNoteMsg = $this->getNotesMsg($pfNotes, $pfNoteMsg);
@@ -250,12 +250,12 @@ class Gateway
         $transData['amount']      = $pfData['amount_gross'];
         $transData['notes']       = $pfNoteMsg;
 
-        $payfastCommon->pflog("Transaction log data: \n" . print_r($transData, true));
+        $paymentRequest->pflog("Transaction log data: \n" . print_r($transData, true));
 
         $order->logTransaction($transData);
 
         // Close log
-        $payfastCommon->pflog('', true);
+        $paymentRequest->pflog('', true);
     }
 
     /**
@@ -280,7 +280,7 @@ class Gateway
     }
 
     /**
-     * @param PayfastCommon $payfastCommon
+     * @param PaymentRequest $paymentRequest
      * @param array $moduleInfo
      * @param string $pfHost
      * @param string $pfParamString
@@ -288,12 +288,12 @@ class Gateway
      * @return bool
      */
     public function verifyDataReceived(
-        PayfastCommon $payfastCommon,
+        PaymentRequest $paymentRequest,
         array $moduleInfo,
         string $pfHost,
         string $pfParamString
     ): bool {
-        return $payfastCommon->pfValidData($moduleInfo, $pfHost, $pfParamString);
+        return $paymentRequest->pfValidData($moduleInfo, $pfHost, $pfParamString);
     }
 
     /**
@@ -311,7 +311,7 @@ class Gateway
 
     /**
      * @param bool $success
-     * @param PayfastCommon $payfastCommon
+     * @param PaymentRequest $paymentRequest
      * @param array $pfNotes
      * @param $order
      * @param mixed $orderId
@@ -320,18 +320,18 @@ class Gateway
      */
     public function upDateOrderStatus(
         bool $success,
-        PayfastCommon $payfastCommon,
+        PaymentRequest $paymentRequest,
         array $pfNotes,
         $order,
         mixed $orderId
     ): array {
         if ($success) {
-            $pfNotes[] = $payfastCommon::PF_MSG_OK;
+            $pfNotes[] = $paymentRequest::PF_MSG_OK;
             try {
                 $order->paymentStatus(Order::PAYMENT_SUCCESS, $orderId);
                 $order->orderStatus(Order::ORDER_COMPLETE, $orderId);
             } catch (Exception $e) {
-                $payfastCommon->pflog('Error Exception message: ' . $e);
+                $paymentRequest->pflog('Error Exception message: ' . $e);
             }
         }
 
@@ -385,16 +385,16 @@ class Gateway
     /**
      * @param $trnId
      * @param bool $success
-     * @param PayfastCommon $payfastCommon
+     * @param PaymentRequest $paymentRequest
      * @param array $pfNotes
      *
      * @return array
      */
-    public function checkTransactionState($trnId, bool $success, PayfastCommon $payfastCommon, array $pfNotes): array
+    public function checkTransactionState($trnId, bool $success, PaymentRequest $paymentRequest, array $pfNotes): array
     {
         if ($trnId) {
             $success   = false;
-            $pfNotes[] = $payfastCommon::PF_ERR_ORDER_PROCESSED;
+            $pfNotes[] = $paymentRequest::PF_ERR_ORDER_PROCESSED;
         }
 
         return array($success, $pfNotes);
