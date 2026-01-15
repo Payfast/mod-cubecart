@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Copyright (c) 2024 Payfast (Pty) Ltd-->
+<!--Copyright (c) 2026 Payfast (Pty) Ltd-->
 <installer version="1.0">
     <info>
         <uid>support@payfast.help</uid>
         <type>gateway</type>
-        <name><![CDATA[Payfast]]></name>
-        <description><![CDATA[Payfast Payment Gateway]]></description>
-        <version>1.2.0</version>
+        <name><![CDATA[Payfast Aggregation]]></name>
+        <description><![CDATA[Payfast Aggregation Payment Gateway]]></description>
+        <version>1.3.0</version>
         <minVersion>5.0.0</minVersion>
         <maxVersion>6.5.*</maxVersion>
         <creator><![CDATA[Payfast]]></creator>

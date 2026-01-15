@@ -3,7 +3,7 @@
 /**
  * index.inc.php
  *
- * Copyright (c) 2024 Payfast (Pty) Ltd
+ * Copyright (c) 2026 Payfast (Pty) Ltd
  *
  * @author App Inlet (Pty) Ltd
  * @link http://www.payfast.co.za/help/cube_cart

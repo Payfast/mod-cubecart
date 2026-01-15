@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Copyright (c) 2024 Payfast (Pty) Ltd-->
+<!--Copyright (c) 2026 Payfast (Pty) Ltd-->
 <definitions version="1.1">
     <group name="payfast">
-        <string name="status"><![CDATA[Enable Payfast]]></string>
+        <string name="status"><![CDATA[Enable Payfast Aggregation]]></string>
         <string name="default"><![CDATA[Default Payment Gateway]]></string>
         <string name="desc"><![CDATA[Gateway Description]]></string>
-        <string name="module_settings"><![CDATA[Payfast Settings:]]></string>
+        <string name="module_settings"><![CDATA[Payfast Aggregation Settings:]]></string>
         <string name="mode"><![CDATA[Test Mode]]></string>
         <string name="merchant_key"><![CDATA[Merchant Key]]></string>
         <string name="merchant_id"><![CDATA[Merchant ID]]></string>
@@ -14,6 +14,6 @@
         <string name="debug_email"><![CDATA[Debug Email]]></string>
         <string name="module_description">
             <![CDATA[Register on <a target="_blank" class="payfast_link" href="https://www.payfast.co.za/registration">Payfast</a> to use this module.]]></string>
-        <string name="module_title"><![CDATA[Payfast]]></string>
+        <string name="module_title"><![CDATA[Payfast Aggregation]]></string>
     </group>
 </definitions>

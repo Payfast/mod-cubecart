@@ -1,9 +1,9 @@
-{* Copyright (c) 2024 Payfast (Pty) Ltd *}
+{* Copyright (c) 2026 Payfast (Pty) Ltd *}
 <link href="modules/gateway/Payfast/skin/admin/style.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
 <div class="payfast_plugin">
     <div class="payfast_image">
-        <img class="payfast__logo" src="modules/gateway/Payfast/admin/payfast.svg" alt="Payfast" border="0">
+        <img class="payfast__logo" src="modules/gateway/Payfast/admin/payfast-logo.svg" alt="Payfast" border="0">
     </div>
     <form class="payfast_form" {$VAL_SELF}" method="post" enctype="multipart/form-data">
     <legend class="payfast_legend">{$LANG.payfast.module_settings}</legend>
